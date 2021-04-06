@@ -1,0 +1,42 @@
+---
+- name: Set configuration
+  hosts:
+    - building1core
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  vars_prompt:
+    - name: username
+      prompt: Junos Username
+      private: no
+
+    - name: password
+      prompt: Junos Password
+      private: yes
+  
+  tasks:
+    - name: Apply changes
+      juniper_junos_config:
+        config_mode: "private"
+        load: 'merge'
+        lines:
+          - 'delete protocols igmp-snooping'
+          - 'set protocols igmp-snooping vlan data1'
+          - 'set protocols igmp-snooping vlan it'
+          - 'set protocols igmp-snooping vlan mgmt1'
+          - 'set protocols igmp-snooping vlan video1'
+          - 'set protocols igmp-snooping vlan wlan1'
+          - 'set protocols igmp-snooping vlan wlang1'
+          - 'set protocols igmp-snooping vlan wlanmgmt1'
+        provider:
+          host: "{{ ansible_host }}"
+          port: "22"
+          user: "{{ username }}"
+          password: "{{ password }}"
+      register: response
+
+    - name: Print the changes applied to the config.
+      debug:
+        var: response

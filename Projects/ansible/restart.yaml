@@ -1,0 +1,34 @@
+---
+- name: Restart devices
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  vars_prompt:
+    - name: username
+      prompt: Junos Username
+      private: no
+
+    - name: password
+      prompt: Junos Password
+      private: yes
+  
+  tasks:
+    - name: Reboot switches
+      juniper_junos_system:
+        action: 'reboot'
+        at: now
+        all_re: true
+        provider:
+          host: "{{ ansible_host }}"
+          port: "22"
+          user: "{{ username }}"
+          password: "{{ password }}"
+      register: result
+
+    - name: Print response
+      debug:
+        var: result

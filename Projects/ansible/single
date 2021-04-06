@@ -1,0 +1,4 @@
+SW4N01  ansible_host=192.168.4.12       device_role=l2_switch
+
+[all:vars]
+ansible_python_interpreter=/usr/local/bin/python3

@@ -1,0 +1,30 @@
+---
+- name: Custom CLI Command
+  hosts:
+    - building1
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  vars_files:
+    - vault-vars.yaml
+
+  vars_prompt:
+    - name: command
+      prompt: Command to Run
+      private: no
+
+  tasks:
+    - name: Run custom command
+      juniper_junos_command:
+        commands:
+          - "{{ command }}"
+        provider: "{{ root_credentials }}"
+      register: uptime
+      poll: 0
+      vars:
+        ansible_command_timeout: 60
+    - name: display uptimes
+      debug: var=uptime.stdout_lines
+

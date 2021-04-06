@@ -1,0 +1,64 @@
+---
+- name: Get firewall config
+  hosts:
+    - firewall
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  vars_files:
+    - vault-vars.yaml
+  
+  tasks:
+    - name: Retrieve the committed configuration
+      juniper_junos_command:
+        command: 'show configuration | display set'
+        provider: "{{ root_credentials }}"
+        dest: "~/repos/corpteam/configs/firewall/{{ inventory_hostname }}.txt"
+        return_output: false
+      register: response
+
+- name: Get core switch configs
+  hosts:
+    - building1core
+    - building4core
+    - building5core
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  vars_files:
+    - vault-vars.yaml
+  
+  tasks:
+    - name: Retrieve the committed configuration
+      juniper_junos_command:
+        command: 'show configuration | display set'
+        provider: "{{ root_credentials }}"
+        dest: "~/repos/corpteam/configs/core/{{ inventory_hostname }}.txt"
+        return_output: false
+      register: response
+
+- name: Get access switch configs
+  hosts:
+    - building1
+    - building4
+    - building5
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+  
+  vars_files:
+    - vault-vars.yaml
+
+  tasks:
+    - name: Retrieve the committed configuration
+      juniper_junos_command:
+        command: 'show configuration | display set'
+        provider: "{{ root_credentials }}"
+        dest: "~/repos/corpteam/configs/access/{{ inventory_hostname }}.txt"
+        return_output: false
+      register: response

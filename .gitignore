@@ -1,0 +1,16 @@
+
+Projects/ansible/vault-vars.yaml
+
+*.xml
+
+*.iml
+
+Projects/google/upload_to_sheets/.vscode/settings.json
+
+Projects/google/upload_to_sheets/__pycache__/upload.cpython-39.pyc
+
+Projects/google/upload_to_sheets/__pycache__/variables.cpython-39.pyc
+
+Projects/workstation/onelogin_users_to_google.py
+
+Projects/workstation/README.md

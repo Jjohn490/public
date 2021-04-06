@@ -1,0 +1,33 @@
+---
+- name: Get device uptime
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  vars_prompt:
+    - name: username
+      prompt: Junos Username
+      private: no
+
+    - name: password
+      prompt: Junos Password
+      private: yes
+  
+  tasks:
+    - name: Running selected commands
+      juniper_junos_command:
+        commands: 
+          - 'show system uptime'
+        formats: "text"
+        provider:
+          host: "{{ ansible_host }}"
+          user: "{{ username }}"
+          password: "{{ password }}"
+      register: response
+
+    - name: Print response
+      debug:
+        var: response

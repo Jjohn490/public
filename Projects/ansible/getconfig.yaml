@@ -1,0 +1,37 @@
+---
+- name: Get device config
+  hosts:
+    - building5
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  vars_prompt:
+    - name: username
+      prompt: Junos Username
+      private: no
+
+    - name: password
+      prompt: Junos Password
+      private: yes
+  
+  tasks:
+    - name: Retrieve the committed configuration
+      juniper_junos_config:
+        retrieve: 'committed'
+        format: 'set'
+        diff: false
+        check: false
+        commit: false
+        provider:
+          host: "{{ ansible_host }}"
+          port: "22"
+          user: "{{ username }}"
+          password: "{{ password }}"
+        dest: "{{ inventory_hostname }}"
+      register: response
+
+    - name: Print the lines in the config.
+      debug:
+        var: response

@@ -1,0 +1,20 @@
+---
+- name: Get firewall config
+  hosts:
+    - firewall
+  connection: local
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  vars_files:
+    - vault-vars.yaml
+  
+  tasks:
+    - name: Retrieve the committed configuration
+      juniper_junos_command:
+        command: 'show configuration | display set'
+        provider: "{{ root_credentials }}"
+        dest: "~/repos/corpteam/configs/firewall/{{ inventory_hostname }}.txt"
+        return_output: false
+      register: response
